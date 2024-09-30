@@ -1,7 +1,9 @@
-import React, { Fragment, useState } from "react";
+import { Fragment, useState } from "react";
 
 import GuessResults from "./GuessResults";
 import Input from "./Input";
+import { Item } from "../interfaces/int";
+import LooserComponent from "./LooserComponent";
 import WinningComponent from "./WinningComp";
 import { checkLetter } from "../utils";
 
@@ -9,12 +11,13 @@ interface GameProps {}
 
 const Game = (props: GameProps) => {
   const [winner, setWinner] = useState<boolean>(false);
-  const [items, setItems] = useState<
+  const [items, setItems] = useState<Item[]>([
     {
-      text: string;
-      id: string;
-    }[]
-  >([{ text: "", id: crypto.randomUUID() }]);
+      text: "",
+      id: crypto.randomUUID(),
+      letterCoincidence: [false, false, false, false, false],
+    },
+  ]);
 
   const resultCheck = (
     obs: {
@@ -30,8 +33,6 @@ const Game = (props: GameProps) => {
         checkLetter(element.text[3], 3) === "correct" &&
         checkLetter(element.text[4], 4);
 
-      console.log(check);
-
       if (check) {
         setWinner(true);
         return true;
@@ -41,13 +42,28 @@ const Game = (props: GameProps) => {
   };
 
   const handleSubmit = (label: string) => {
-    const nextItems = [...items, { text: label, id: crypto.randomUUID() }];
+    const nextItems = [
+      ...items,
+      {
+        text: label,
+        id: crypto.randomUUID(),
+        letterCoincidence: [
+          checkLetter(label[0], 0) === "correct",
+          checkLetter(label[1], 1) === "correct",
+          checkLetter(label[2], 2) === "correct",
+          checkLetter(label[3], 3) === "correct",
+          checkLetter(label[4], 4) === "correct",
+        ],
+      },
+    ];
+
     resultCheck(nextItems);
     setItems(nextItems);
   };
 
   return (
     <Fragment>
+      {items.length === 6 && !winner && <LooserComponent />}
       {winner && <WinningComponent guesses={items.length - 1} />}
       <Input handleSubmit={handleSubmit} />
       <GuessResults items={items} />

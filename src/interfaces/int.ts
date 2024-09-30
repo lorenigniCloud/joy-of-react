@@ -1,11 +1,12 @@
-export interface CellProps {
-  value: string;
-  position: number;
+export interface Item {
+  text: string;
+  id: string;
+  letterCoincidence: boolean[];
 }
 
-export interface GuessResultsProps {
-  items: {
-    text: string;
-    id: string;
-  }[];
-}
+export type LetterInfo = {
+  count: number;
+  indices: number[];
+};
+
+export type LetterCount = { [key: string]: LetterInfo };
