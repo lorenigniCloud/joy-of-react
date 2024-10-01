@@ -31,7 +31,7 @@ const Game = (props: GameProps) => {
         checkLetter(element.text[1], 1) === "correct" &&
         checkLetter(element.text[2], 2) === "correct" &&
         checkLetter(element.text[3], 3) === "correct" &&
-        checkLetter(element.text[4], 4);
+        checkLetter(element.text[4], 4) === "correct";
 
       if (check) {
         setWinner(true);
